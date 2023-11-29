@@ -29,7 +29,7 @@ public class UserRoleController {
     public ResponseEntity<UserRoleDtoResponse> create(@Valid @RequestBody UserRoleDtoRequest dtoRequest) {
         UserRole userRole = userRoleService.create(dtoRequest);
 
-        UserRoleDtoResponse userRoleDtoResponse = UserRoleMapper.userRoleDtoResponse(userRole);
+        UserRoleDtoResponse userRoleDtoResponse = UserRoleMapper.userRoleToDo(userRole);
 
         return new ResponseEntity<>(userRoleDtoResponse, HttpStatus.CREATED);
     }

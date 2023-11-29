@@ -10,4 +10,8 @@ public class UserRoleDtoRequest {
     @NotNull
     private Long roleId;
 
+    @NotNull
+    private Long authorityId;
+
+
 }

@@ -4,18 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "role")
+@Table(name = "authority")
 @Getter
 @Setter
-public class Role {
+public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
+    @Column(name = "title", nullable = false, unique = true)
+    private String title;
 }

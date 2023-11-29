@@ -14,12 +14,16 @@ public class UserRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
+    @ManyToOne
+    @JoinColumn(name = "authority_id")
+    private Authority authority; // You can associate an authority with the user's role
 }
+

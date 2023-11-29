@@ -6,6 +6,7 @@ import com.example.GradingSystemNew.dto.response.UserDtoResponse;
 import com.example.GradingSystemNew.exception.CustomExceptionMessage;
 import com.example.GradingSystemNew.exception.custom.*;
 import com.example.GradingSystemNew.mapper.UserMapper;
+import com.example.GradingSystemNew.module.Group;
 import com.example.GradingSystemNew.module.security.JWTTokenProvider;
 import com.example.GradingSystemNew.module.security.User;
 import com.example.GradingSystemNew.module.security.UserPrincipal;
@@ -31,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Service
-
 @RequiredArgsConstructor
 @Log4j2
 
@@ -40,9 +40,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
 
     private final AuthenticationManager authenticationManager;
+
+    private final String AUTHENTICATION_EXCEPTION = "Логин или пароль неправольно введены.";
+    private final String AUTHENTICATION_IS_ACTIVE_EXCEPTION = "Ваш аккаунт не активен.";
+    private final String AUTHENTICATION_IS_NON_LOCKED_EXCEPTION = "Ваш аккаунт заблокирован.";
     private final JWTTokenProvider jwtTokenProvider;
     private final String USERNAME_ALREADY_EXIST = " This login is taken";
-    private final String AUTHENTICATION_EXCEPTION = "Login or password is already taken";
+
 
     @Override
     public void delete(Long userId) {
@@ -50,7 +54,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void registration(UserRegistrationDtoRequest dtoRequest) {
+    public Optional<User> getById(Long id) {
+        return userRepository.findById(id);
+    }
+    @Override
+    public User getByIdThrowException(Long id) {
+        return this.getById(id).orElseThrow(() -> new NotFoundException(CustomExceptionMessage.NOT_FOUND_EXCEPTION_MESSAGE));
+    }
+
+    @Override
+    public User registration(UserRegistrationDtoRequest dtoRequest) {
         String username = dtoRequest.getUsername().toLowerCase().trim();
         String password = dtoRequest.getPassword().trim();
 
@@ -64,7 +77,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             createdUser.setPassword(encoder.encode(password));
 
             createdUser.setName(dtoRequest.getName());
-            this.save(createdUser);
+            return this.save(createdUser);
         }catch (Exception e){
             log.error(e.getMessage());
             throw new RepositoryCreateException(CustomExceptionMessage.CREATE_EXCEPTION_MESSAGE);
@@ -86,7 +99,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         try {
             this.authenticate(username, password);
         }catch (Exception e){
-            throw new CustomShowMessageException(this.AUTHENTICATION_EXCEPTION);
+            if (e.getMessage().equals("User is disabled")) {
+                throw new AuthenticationException(this.AUTHENTICATION_IS_ACTIVE_EXCEPTION);
+            }
+            if (e.getMessage().equals("User account is locked")) {
+                throw new AuthenticationException(this.AUTHENTICATION_IS_NON_LOCKED_EXCEPTION);
+            }
+            throw new AuthenticationException(this.AUTHENTICATION_EXCEPTION);
         }
 
 

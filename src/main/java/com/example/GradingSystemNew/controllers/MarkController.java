@@ -19,7 +19,7 @@ import java.util.List;
 public class MarkController extends ExceptionHandling {
     private final MarkService markService;
 
-    @GetMapping("/subjects/{subjectId}")
+    @GetMapping("/subjects/{studentId}/{subjectId}")
     public ResponseEntity<List<MarkDtoResponse>> getMarksByStudentAndSubject(
             @PathVariable Long studentId,
             @PathVariable Long subjectId

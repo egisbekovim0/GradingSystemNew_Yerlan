@@ -4,10 +4,12 @@ CREATE TABLE users (
                        password VARCHAR(255) NOT NULL,
                     name VARCHAR(255) NOT NULL
 );
+
 CREATE TABLE role (
                       id BIGSERIAL PRIMARY KEY,
                       name VARCHAR(255) NOT NULL
 );
+
 CREATE TABLE user_role (
                            id BIGSERIAL PRIMARY KEY,
                            user_id BIGINT NOT NULL,
@@ -24,7 +26,6 @@ CREATE TABLE students (
                           FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-
 CREATE TABLE teachers (
                           id BIGSERIAL PRIMARY KEY,
                           f_name VARCHAR(30) NOT NULL,
@@ -33,18 +34,15 @@ CREATE TABLE teachers (
                           FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-
 CREATE TABLE subjects (
                           id BIGSERIAL PRIMARY KEY,
                           name VARCHAR(30) NOT NULL
 );
 
-
 CREATE TABLE groups (
                         id BIGSERIAL PRIMARY KEY,
                         name VARCHAR(30) NOT NULL
 );
-
 
 CREATE TABLE group_subject (
                                id BIGSERIAL PRIMARY KEY,
@@ -57,6 +55,7 @@ CREATE TABLE group_subject (
                                FOREIGN KEY (subject_id) REFERENCES subjects(id),
                                FOREIGN KEY (teacher_id) REFERENCES teachers(id)
 );
+
 create table mark_type(
                           id BIGSERIAL PRIMARY KEY,
                           name VARCHAR(30) NOT NULL UNIQUE

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -21,6 +23,11 @@ public class User {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "user_roles_id")
+    private UserRole userRole;
+
 
 
 }
